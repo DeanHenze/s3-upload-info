@@ -136,21 +136,27 @@ s3_response = s3.list_objects_v2(
 )
 ```
 
+
 ## Automate Credential Rotation
 
 These instructions assume that you have an existing SRV account with access keys installed in your local AWS credentials file, which is typically stored at this path: `~/.aws/credentials`. You can rotate keys either using AWS CLI commands or using the `rotate_upload_access_keys.py` Python script in this repo.
 
 ### AWS CLI
 
-The AWS CLI commands are 
+The command to retrieve the new credentials and output them to the CLI is
 
 ```
-    aws --profile <Service Account Name> --region us-west-2 secretsmanager get-secret-value --secret-id User_<Service Account Name>_AccessKey
-
-    aws --profile <Service Account Name> configure
+aws --profile <Service Account Name> --region us-west-2 secretsmanager get-secret-value --secret-id User_<Service Account Name>_AccessKey
 ```
 
-Where `<Service Account Name>` is the name of the your service account, e.g. "SRV-podaac-dev-cowvr". Note that the first command retrieves the new keys, and the second command triggers an interactive user input within the CLI to input the new creds.
+Where `<Service Account Name>` is the name of the your service account, e.g. "SRV-podaac-dev-cowvr". From there, you can either manual paste these new credentials into your `~/.aws/credentials` file or write a script to do it. A third option is to use the AWS CLI command
+
+```
+aws --profile <Service Account Name> configure
+```
+
+Which will prompt user input on the CLI to update the keys. When asked for `Default region name` you can enter "us-west-2" and when asked for `Default output format` you can just hit `Enter`.
+
 
 ### Python script
 
