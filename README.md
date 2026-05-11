@@ -138,11 +138,25 @@ s3_response = s3.list_objects_v2(
 
 ## Automate Credential Rotation
 
-These instructions assume that you have an existing SRV account with access keys installed in your local AWS credentials file, which is typically stored at this path: `~/.aws/credentials`.
+These instructions assume that you have an existing SRV account with access keys installed in your local AWS credentials file, which is typically stored at this path: `~/.aws/credentials`. You can rotate keys either using AWS CLI commands or using the `rotate_upload_access_keys.py` Python script in this repo.
+
+### AWS CLI
+
+The AWS CLI commands are 
+
+```
+    aws --profile <Service Account Name> --region us-west-2 secretsmanager get-secret-value --secret-id User_<Service Account Name>_AccessKey
+
+    aws --profile <Service Account Name> configure
+```
+
+Where `<Service Account Name>` is the name of the your service account, e.g. "SRV-podaac-dev-cowvr". Note that the first command retrieves the new keys, and the second command triggers an interactive user input within the CLI to input the new creds.
+
+### Python script
 
 This example requires Python 3 and the [boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) python package.
 
-### MACOS/LINUX
+#### MACOS/LINUX
 
 Automate the periodic retrieval and installation of your PODAAC-managed s3 access keys using a local cron job.
 
@@ -158,6 +172,6 @@ This example crontab entry executes [a python script](rotate_upload_access_keys.
 
 Output from each run is piped to a log file here: `$HOME/.aws/rotate_upload_access_keys.log`
 
-### WINDOWS
+#### WINDOWS
 
 @jjmcnelis to update this ASAP with an equivalent example using Windows task scheduler.
